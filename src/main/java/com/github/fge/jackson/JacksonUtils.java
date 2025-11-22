@@ -19,21 +19,20 @@
 
 package com.github.fge.jackson;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.core.exc.StreamWriteException;
+import tools.jackson.core.StreamWriteFeature;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectReader;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.JsonNodeFactory;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -98,15 +97,10 @@ public final class JacksonUtils
         if (!node.isObject())
             return ret;
 
-        final Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
-
-        Map.Entry<String, JsonNode> entry;
-
-        while (iterator.hasNext()) {
-            entry = iterator.next();
-            ret.put(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, JsonNode> property : node.properties()) {
+            ret.put(property.getKey(), property.getValue());
         }
-
+        
         return ret;
     }
 
@@ -124,11 +118,11 @@ public final class JacksonUtils
         try {
             WRITER.writeValue(writer, node);
             writer.flush();
-        } catch (JsonGenerationException e) {
+        } catch (StreamWriteException e) {
             throw new RuntimeException("How did I get there??", e);
-        } catch (JsonMappingException e) {
+        } catch (DatabindException e) {
             throw new RuntimeException("How did I get there??", e);
-        } catch (IOException ignored) {
+        //} catch (IOException ignored) {
             // cannot happen
         }
 
@@ -142,7 +136,7 @@ public final class JacksonUtils
      *
      * <ul>
      *     <li>{@link DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS};</li>
-     *     <li>{@link com.fasterxml.jackson.core.JsonGenerator.Feature#WRITE_BIGDECIMAL_AS_PLAIN};</li>
+     *     <li>{@link StreamWriteFeature#WRITE_BIGDECIMAL_AS_PLAIN};</li>
      *     <li>{@link SerializationFeature#INDENT_OUTPUT}.</li>
      * </ul>
      *
@@ -152,9 +146,10 @@ public final class JacksonUtils
      */
     public static ObjectMapper newMapper()
     {
-        return new ObjectMapper().setNodeFactory(FACTORY)
-            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-            .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
-            .enable(SerializationFeature.INDENT_OUTPUT);
+        return JsonMapper.builder().nodeFactory(FACTORY)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+                .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .build();
     }
 }

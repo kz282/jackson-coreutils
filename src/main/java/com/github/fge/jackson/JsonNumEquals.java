@@ -19,7 +19,7 @@
 
 package com.github.fge.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -84,7 +84,7 @@ public final class JsonNumEquals
         /*
          * For all other primitive types than numbers, trust JsonNode
          */
-        if (!a.isContainerNode())
+        if (!a.isContainer())
             return a.equals(b);
 
         /*
@@ -122,7 +122,7 @@ public final class JsonNumEquals
          * If this is a primitive type (other than numbers, handled above),
          * delegate to JsonNode.
          */
-        if (!t.isContainerNode())
+        if (!t.isContainer())
             return t.hashCode();
 
         /*
@@ -151,16 +151,12 @@ public final class JsonNumEquals
         /*
          * Not an array? An object.
          */
-        final Iterator<Map.Entry<String, JsonNode>> iterator = t.fields();
-
-        Map.Entry<String, JsonNode> entry;
-
-        while (iterator.hasNext()) {
-            entry = iterator.next();
+        for (Map.Entry<String, JsonNode> property : t.properties()) {
             ret = 31 * ret
-                + (entry.getKey().hashCode() ^ hash(entry.getValue()));
+                + (property.getKey().hashCode() ^ hash(property.getValue()));
+            
         }
-
+        
         return ret;
     }
 
@@ -198,26 +194,24 @@ public final class JsonNumEquals
          * Grab the key set from the first node
          */
         final Set<String> keys = new HashSet<>();
-        Iterator<String> iterator1 = a.fieldNames();
-        while (iterator1.hasNext()) {
-            final String next = iterator1.next();
-            if (next != null) {
-                keys.add(next);
+        
+        for (String propertyName : a.propertyNames()) {
+            if (propertyName != null) {
+                keys.add(propertyName);
             } else {
                 throw new NullPointerException();
             }
         }
-
+        
         /*
          * Grab the key set from the second node, and see if both sets are the
          * same. If not, objects are not equal, no need to check for children.
          */
         final Set<String> set = new HashSet<>();
-        Iterator<String> iterator2 = b.fieldNames();
-        while (iterator2.hasNext()) {
-            final String next = iterator2.next();
-            if (next != null) {
-            set.add(next);
+        
+        for (String propertyName : b.propertyNames()) {
+            if (propertyName != null) {
+                set.add(propertyName);
             } else {
                 throw new NullPointerException();
             }

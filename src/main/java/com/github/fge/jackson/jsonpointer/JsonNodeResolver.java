@@ -19,7 +19,7 @@
 
 package com.github.fge.jackson.jsonpointer;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -47,7 +47,7 @@ public final class JsonNodeResolver
     @Override
     public JsonNode get(final JsonNode node)
     {
-        if (node == null || !node.isContainerNode())
+        if (node == null || !node.isContainer())
             return null;
         final String raw = token.getRaw();
         return node.isObject() ? node.get(raw) : node.get(arrayIndexFor(raw));

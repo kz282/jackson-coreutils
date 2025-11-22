@@ -23,7 +23,7 @@
  * <p>This package, while primarily centered on {@link
  * com.github.fge.jackson.jsonpointer.JsonPointer}, is a generalization of JSON
  * Pointer to all implementations of Jackson's {@link
- * com.fasterxml.jackson.core.TreeNode}.</p>
+ * tools.jackson.core.TreeNode}.</p>
  *
  * <p>The fundamentals of JSON Pointer remain the same, however: a JSON pointer
  * is a set of reference tokens separated by the {@code /} character. One

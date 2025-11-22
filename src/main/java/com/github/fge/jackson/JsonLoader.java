@@ -19,7 +19,7 @@
 
 package com.github.fge.jackson;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import javax.annotation.Nonnull;
 import java.io.File;

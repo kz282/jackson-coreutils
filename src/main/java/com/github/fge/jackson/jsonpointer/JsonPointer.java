@@ -19,9 +19,9 @@
 
 package com.github.fge.jackson.jsonpointer;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.MissingNode;
+import tools.jackson.core.TreeNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.MissingNode;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;

@@ -20,13 +20,13 @@
 package com.github.fge.jackson;
 
 
-import com.fasterxml.jackson.core.JsonLocation;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
+import tools.jackson.core.TokenStreamLocation;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.MappingIterator;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectReader;
 import com.github.fge.Builder;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.bundle.PropertiesBundle;
@@ -36,6 +36,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import tools.jackson.core.StreamReadFeature;
 
 /**
  * Class dedicated to reading JSON values from {@link InputStream}s and {@link
@@ -69,8 +70,10 @@ public final class JsonNodeReader
 
     public JsonNodeReader(final ObjectMapper mapper)
     {
-        reader = mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
-            .readerFor(JsonNode.class);
+        reader = mapper.rebuild()
+                .enable(StreamReadFeature.AUTO_CLOSE_SOURCE)
+                .build()
+                .readerFor(JsonNode.class);
     }
 
     /**
@@ -96,7 +99,7 @@ public final class JsonNodeReader
         MappingIterator<JsonNode> iterator = null;
 
         try {
-            parser = reader.getFactory().createParser(in);
+            parser = reader.createParser(in);
             iterator = reader.readValues(parser);
             return readNode(iterator);
         } finally {
@@ -124,7 +127,7 @@ public final class JsonNodeReader
         MappingIterator<JsonNode> iterator = null;
 
         try {
-            parser = reader.getFactory().createParser(r);
+            parser = reader.createParser(r);
             iterator = reader.readValues(parser);
             return readNode(iterator);
         } finally {
@@ -140,7 +143,7 @@ public final class JsonNodeReader
     private static JsonNode readNode(final MappingIterator<JsonNode> iterator)
         throws IOException
     {
-        final JsonParser parser = iterator.getParser();
+        final JsonParser parser = iterator.parser();
         final JsonParseExceptionBuilder builder
             = new JsonParseExceptionBuilder(parser);
 
@@ -152,12 +155,12 @@ public final class JsonNodeReader
         final JsonNode ret = iterator.nextValue();
 
         builder.setMessage(BUNDLE.getMessage("read.trailingData"))
-            .setLocation(iterator.getCurrentLocation());
+            .setLocation(iterator.currentLocation());
 
         try {
             if (iterator.hasNextValue())
                 throw builder.build();
-        } catch (JsonParseException e) {
+        } catch (StreamReadException e) {
             throw builder.setLocation(e.getLocation()).build();
         }
 
@@ -165,17 +168,17 @@ public final class JsonNodeReader
     }
 
     private static final class JsonParseExceptionBuilder
-        implements Builder<JsonParseException>
+        implements Builder<StreamReadException>
     {
         private JsonParser parser;
         private String message = "";
-        private JsonLocation location;
+        private TokenStreamLocation location;
 
         private JsonParseExceptionBuilder(@Nonnull final JsonParser parser)
         {
             BUNDLE.checkNotNull(parser, "read.nullArgument");
             this.parser = parser;
-            location = parser.getCurrentLocation();
+            location = parser.currentLocation();
         }
 
         private JsonParseExceptionBuilder setMessage(
@@ -186,16 +189,16 @@ public final class JsonNodeReader
         }
 
         private JsonParseExceptionBuilder setLocation(
-            @Nonnull final JsonLocation location)
+            @Nonnull final TokenStreamLocation location)
         {
             this.location = BUNDLE.checkNotNull(location, "read.nullArgument");
             return this;
         }
 
         @Override
-        public JsonParseException build()
+        public StreamReadException build()
         {
-            return new JsonParseException(parser, message, location);
+            return new StreamReadException(parser, message, location);
         }
     }
 }

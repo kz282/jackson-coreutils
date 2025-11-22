@@ -19,9 +19,9 @@
 
 package com.github.fge.jackson;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.bundle.PropertiesBundle;
 import org.testng.annotations.DataProvider;
@@ -93,7 +93,7 @@ public final class JsonNodeReaderTest
         try {
             reader.fromInputStream(supplier.get());
             fail("No exception thrown!!");
-        } catch (JsonParseException e) {
+        } catch (StreamReadException e) {
             assertEquals(e.getOriginalMessage(), message);
         }
     }

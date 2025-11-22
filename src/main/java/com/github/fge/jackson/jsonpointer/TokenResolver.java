@@ -19,8 +19,8 @@
 
 package com.github.fge.jackson.jsonpointer;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.TreeNode;
+import tools.jackson.databind.JsonNode;
 
 import javax.annotation.concurrent.ThreadSafe;
 

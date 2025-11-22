@@ -29,7 +29,8 @@ targetCompatibility = JavaVersion.VERSION_1_7; // defaults to sourceCompatibilit
  * List of dependencies
  */
 dependencies {
-    implementation(group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.11.0");
+    implementation(group: "tools.jackson.core", name: "jackson-databind", version: "3.0.0");
+//    implementation(group: "com.fasterxml.jackson.core", name: "jackson-databind", version: "2.11.0");
     implementation(group: "com.github.java-json-tools", name: "msg-simple", version: "1.2");
     implementation(group: "com.google.code.findbugs", name: "jsr305", version: "3.0.2");
     testImplementation(group: "org.testng", name: "testng", version: "7.1.0") {
