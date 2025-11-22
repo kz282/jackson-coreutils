@@ -34,6 +34,8 @@ import tools.jackson.databind.node.JsonNodeFactory;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import tools.jackson.core.ObjectReadContext;
+import tools.jackson.databind.DeserializationConfig;
 
 /**
  * Utility class for Jackson
