@@ -20,7 +20,7 @@ project for details.
 
 ## What this is
 
-This package is meant to be used with Jackson 2.2.x. It provides the three following features:
+This package is meant to be used with Jackson 3.0.x. It provides the three following features:
 
 * write/read JSON decimal numbers using `BigDecimal` (instead of `double`) for optimal numeric
   precision;
@@ -30,8 +30,8 @@ This package is meant to be used with Jackson 2.2.x. It provides the three follo
 
 ## Versions
 
-* `jackson-coreutils` is **2.0**
-* `jackson-coreutils-equivalence` is **1.0**
+* `jackson-coreutils` is **2.1**
+* `jackson-coreutils-equivalence` is **1.1**
 
 Javadoc is [available
 online](https://java-json-tools.github.io/jackson-coreutils/index.html).
@@ -44,8 +44,8 @@ With Gradle:
 
 ```groovy
 dependencies {
-    compile(group: "com.github.java-json-tools", name: "jackson-coreutils", version: "2.0");
-    compile(group: "com.github.java-json-tools", name: "jackson-coreutils-equivalence", version: "1.0");
+    compile(group: "com.github.java-json-tools", name: "jackson-coreutils", version: "2.1");
+    compile(group: "com.github.java-json-tools", name: "jackson-coreutils-equivalence", version: "1.1");
 }
 ```
 
@@ -55,12 +55,12 @@ With Maven:
 <dependency>
     <groupId>com.github.java-json-tools</groupId>
     <artifactId>jackson-coreutils</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
 </dependency>
 <dependency>
     <groupId>com.github.java-json-tools</groupId>
     <artifactId>jackson-coreutils-equivalence</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 

@@ -1,3 +1,7 @@
+## Kovács Zoltán (https://github.com/kz282)
+
+* Upgrade to Jackson 3.0
+
 ## Randy Watler
 
 * Added `.parent()` to `JsonPointer` (darn useful!).
